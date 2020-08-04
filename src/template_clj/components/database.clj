@@ -1,18 +1,9 @@
 (ns template-clj.components.database
   (:require [com.stuartsierra.component :as component]
-            [next.jdbc :as jdbc]))
+            [next.jdbc.connection :as connection]
+            [next.jdbc :as jdbc])
+  (:import (com.zaxxer.hikari HikariDataSource)))
 
-
-(def db {:dbtype "postgresql"
-         :dbname "example"
-         :user "postgres"
-         :password "postgres"
-         :host "127.0.0.1"
-         :port 5432})
-
-
-(defn create-connection [option]
-  (jdbc/get-datasource option))
 
 (defrecord DatabasePostgress
   [option conn]
@@ -20,11 +11,7 @@
   (start [component]
     (if conn
       component
-      (let [conn (create-connection option)]
-            ;jdbc/execute! conn ["CREATE TABLE user
-            ;;                    user_uuid int,
-            ;;                    username varchar(255),
-            ;                    email varchar(255)"]]
+      (let [conn (connection/->pool HikariDataSource option)]
         (assoc component :conn conn))))
 
   (stop  [component]
@@ -37,6 +24,6 @@
         (assoc component :conn nil))
       component)))
 
-(defn create-database! []
+(defn create-database! [db]
   (->DatabasePostgress db nil))
 

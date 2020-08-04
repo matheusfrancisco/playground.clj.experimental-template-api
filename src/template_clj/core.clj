@@ -16,7 +16,7 @@
   (component/system-map
     :config (config/new-config config/config-map)
     :storage (storage/new-in-memory)
-    :db (db/create-database!)
+    :db (db/create-database! config/db)
     :routes  (routes/new-routes #'template-clj.service/routes)
     :http-server (component/using (webserver/new-webserver) [:config :routes :storage :db])))
 
