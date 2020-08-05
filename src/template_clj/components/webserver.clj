@@ -38,7 +38,7 @@
       http/dev-interceptors))
 
 
-(defrecord WebServer [config routes storage db]
+(defrecord WebServer [config routes storage db datomic]
   component/Lifecycle
   (start [this]
     (println

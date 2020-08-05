@@ -10,17 +10,29 @@
                  [io.pedestal/pedestal.jetty "0.5.5"]
                  [hikari-cp "2.13.0"]
                  [prismatic/schema "1.1.12"]
+                 [com.datomic/datomic-pro "0.9.5561"]
                  [clj-http "3.10.1"]
                  [org.postgresql/postgresql "42.2.10"]
                  [io.pedestal/pedestal.service "0.5.5"]
+                 [environ "1.1.0"]
                  [io.pedestal/pedestal.service-tools "0.5.5"]
+                 [datomic-schema "1.3.0"]
                  [seancorfield/next.jdbc "1.1.569"]
                  [prismatic/schema "1.1.10"]]
   :main ^:skip-aot template-clj.core
   :resource-paths ["configs"]
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}}
+  :profiles {:uberjar {:aot :all}
+             :dev  {:repl-options         {:timeout 320000}
+                    :env          {:db-connection-uri "datomic:mem://template-dev"
+                                   :http-server-port 3000}
+                    :source-paths ["src/template_clj/"]}
+             :test  {:env    {:db-connection-uri "datomic:mem://template-test"
+                             :http-server-port 3333}}}
   :uberjar-name "api.jar"
   :test-selectors {:default (complement :integration)
                    :integration :integration}
-  :repl-options {:init-ns template-clj.core})
+  :repl-options {:init-ns template-clj.core}
+  :repositories [["my.datomic.com" {:url      "https://my.datomic.com/repo"
+                                    :username [:env/my_datomic_username]
+                                    :password [:env/my_datomic_password]}]])

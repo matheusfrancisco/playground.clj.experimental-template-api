@@ -1,6 +1,7 @@
 (ns template-clj.service
   (:require [io.pedestal.http :as http]
             [io.pedestal.http.body-params :as body-params]
+            [datomic.api :as d]
             [next.jdbc :as jdbc]
             [ring.util.response :as ring-resp]))
 
@@ -61,7 +62,24 @@
 (def common-interceptors
   [(body-params/body-params) http/json-body])
 
+(defn find-users [db]
+  (d/q '[:find [(pull ?user [:user/type
+                             :user/email
+                             :user/name
+                             :user/id])
+                ...]
+         :where [?user :user/name]]
+       db))
+
+(defn get-all-users-datomic! [conn]
+  (find-users conn))
+
+(defn get-all-users-datomic
+  [{{datomic :datomic} :components}]
+  (ring-resp/response {:message (get-all-users-datomic! (d/db (:conn datomic)))}))
+
 (def routes
   #{["/" :get (conj common-interceptors `home-page)]
     ["/users-db" :get (conj common-interceptors `get-all-users-db)]
+    ["/users-datomic" :get (conj common-interceptors `get-all-users-datomic)]
     ["/users" :get (conj common-interceptors `get-all-users)]})
