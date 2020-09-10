@@ -1,9 +1,10 @@
-# Template API using clojure
+# Template API REST using clojure
 
 This is my API REST tempalte to clojure, using components and `databases in memory`, `postgres` or `datomic`, you choose your database.
 Exist an basic test setup to integration test with components to use database in memory, if you need test with other database
 you must change the config-map test
 
+in case you need help, please send me a message: mathuesmachadoufsc@gmail.com
 
 # HOW TO RUN
 ```
@@ -20,5 +21,6 @@ http://localhost:8080/
 - [ ] create command to run only postgresql
 - [ ] create command to run only in memory datomic
 - [ ] move routes in service clj to your own service for each database
+- [ ] add integration test to each route
 
 # Contribute
