@@ -55,7 +55,6 @@
 
 (defn get-all-users-db
   [request]
-  (prn request)
   (let [conn (get-connection-postgres request)]
     (ring-resp/response {:message (get-all-users-db! conn)})))
 
